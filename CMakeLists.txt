@@ -7,8 +7,10 @@ set(CMAKE_OSX_ARCHITECTURES x86_64 CACHE STRING "Intel-only (10.9)")
 
 project(LegacySupportUpdater LANGUAGES OBJC)
 
-# CORRECT shipyard usage: resolved via the user package registry (installed by the
-# CI action, or locally per the README "Install (once)"). Never vendored/submoduled.
+# CORRECT shipyard usage: resolved from shipyard-cmake's own prefix -- configure this
+# project with shipyard-cmake and there is nothing to register and no search path to
+# set (the README's "Install (once)" says where shipyard-cmake comes from). Never
+# vendored/submoduled.
 find_package(MavericksShipyard REQUIRED)
 include(Mavericks)          # universal umbrella: AppleClang gate + build conventions
 include(MavericksSparkle)   # the Sparkle updater .app builder
