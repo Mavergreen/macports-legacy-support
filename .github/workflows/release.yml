@@ -55,8 +55,8 @@ jobs:
           fetch-depth: 0   # version.sh needs the full tag history
 
       - name: Install mavericks-shipyard
-        # shipyard installs itself via its own action (self-registers in the CMake user
-        # package registry). We do NOT clone it, hand-run cmake install, or vendor it as a
+        # shipyard installs itself via its own action, which puts shipyard-cmake on PATH and
+        # exports SHIPYARD_SCRIPTS. We do NOT clone it, hand-run an install, or vendor it as a
         # nested git checkout. @v1 is the moving major tag; Renovate's github-actions manager
         # tracks it (no SHA, no marker comment).
         uses: ModernMavericks/shipyard/.github/actions/install@v1
@@ -104,8 +104,8 @@ jobs:
       - name: Build the Sparkle updater (Cocoa/ObjC; must not link the library)
         run: |
           B=build/updater
-          cmake -S . -B "$B" -DCMAKE_OBJC_COMPILER=/usr/bin/clang
-          cmake --build "$B" --target LegacySupportUpdater
+          shipyard-cmake -S . -B "$B" -DCMAKE_OBJC_COMPILER=/usr/bin/clang
+          shipyard-cmake --build "$B" --target LegacySupportUpdater
           bin="$B/LegacySupportUpdater.app/Contents/MacOS/LegacySupportUpdater"
           otool -L "$bin" | tee /tmp/o.txt
           ! grep -qi MacportsLegacySupport /tmp/o.txt || { echo "::error::updater links the library it updates"; exit 1; }
