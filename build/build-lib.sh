@@ -7,7 +7,11 @@ MLS_ROOT="$(cd "$SELF/.." && pwd)"; export MLS_ROOT
 . "$SELF/lib.sh"
 
 U="$(upstream_version)"
-STAGE="${1:-$MLS_ROOT/build/stage}"
+# spec: claude-plugins/modernmavericks/skills/modernmavericks-conventions/SKILL.md
+#       "Build OUT of the source tree, onto fast local storage" -- CI exports
+#       MAVERICKS_BUILD_ROOT itself; this default only covers a plain local run.
+: "${MAVERICKS_BUILD_ROOT:=${TMPDIR:-/tmp}/mm-build}"
+STAGE="${1:-$MAVERICKS_BUILD_ROOT/stage}"
 src="$(sh "$SELF/fetch-upstream.sh")"
 if [ -z "${SDK:-}" ]; then
   SDK="$(sh "$(msc_scripts)/fetch_sdk.sh")"

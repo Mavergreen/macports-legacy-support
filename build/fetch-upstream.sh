@@ -7,7 +7,11 @@ MLS_ROOT="$(cd "$SELF/.." && pwd)"; export MLS_ROOT
 . "$SELF/lib.sh"
 
 U="$(upstream_version)"
-DEST="${1:-$MLS_ROOT/build/upstream}"
+# spec: claude-plugins/modernmavericks/skills/modernmavericks-conventions/SKILL.md
+#       "Build OUT of the source tree, onto fast local storage" -- CI exports
+#       MAVERICKS_BUILD_ROOT itself; this default only covers a plain local run.
+: "${MAVERICKS_BUILD_ROOT:=${TMPDIR:-/tmp}/mm-build}"
+DEST="${1:-$MAVERICKS_BUILD_ROOT/upstream}"
 mkdir -p "$DEST"
 tarball="$DEST/v${U}.tar.gz"
 url="https://github.com/macports/macports-legacy-support/archive/refs/tags/v${U}.tar.gz"

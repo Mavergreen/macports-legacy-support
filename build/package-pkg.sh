@@ -6,8 +6,12 @@ SELF="$(cd "$(dirname "$0")" && pwd)"
 MLS_ROOT="$(cd "$SELF/.." && pwd)"; export MLS_ROOT
 . "$SELF/lib.sh"
 
-STAGE="${STAGE:-$MLS_ROOT/build/stage}"
-OUT="${OUT:-$MLS_ROOT/build/out}"
+# spec: claude-plugins/modernmavericks/skills/modernmavericks-conventions/SKILL.md
+#       "Build OUT of the source tree, onto fast local storage" -- CI exports
+#       MAVERICKS_BUILD_ROOT itself; this default only covers a plain local run.
+: "${MAVERICKS_BUILD_ROOT:=${TMPDIR:-/tmp}/mm-build}"
+STAGE="${STAGE:-$MAVERICKS_BUILD_ROOT/stage}"
+OUT="${OUT:-$MAVERICKS_BUILD_ROOT/out}"
 : "${UPD_APP:?package-pkg: UPD_APP (built updater .app) required}"
 : "${VERSION:?package-pkg: VERSION (full version) required}"
 SCRIPTS="$(msc_scripts)"

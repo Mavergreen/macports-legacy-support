@@ -72,6 +72,11 @@ jobs:
       - name: Record the pre-build tree
         run: sh "$SHIPYARD_SCRIPTS/assert-tree-clean.sh" --record
 
+      - name: Build out of tree
+        run: |
+          echo "MAVERICKS_BUILD_ROOT=$RUNNER_TEMP/mm-build" >> "$GITHUB_ENV"
+          echo "CROSS_BUILD_DIR=$RUNNER_TEMP/mm-build/macports-legacy-support-cross" >> "$GITHUB_ENV"
+
       # The shared runner takes the whole top-level suite, so a newly added test runs the day it
       # lands. This repo is why that matters: nine test files CI never ran, two of them rotted -- one
       # asserting Renovate's pre-migration fileMatch key, one checking an .icns filename that changed
@@ -106,7 +111,7 @@ jobs:
 
       - name: Build the Sparkle updater (Cocoa/ObjC; must not link the library)
         run: |
-          B=build/updater
+          B="$CROSS_BUILD_DIR"
           shipyard-cmake -S . -B "$B" -DCMAKE_OBJC_COMPILER=/usr/bin/clang
           shipyard-cmake --build "$B" --target LegacySupportUpdater
           bin="$B/LegacySupportUpdater.app/Contents/MacOS/LegacySupportUpdater"
@@ -115,7 +120,7 @@ jobs:
 
       - name: Package the .pkg (library + updater + 10.9.5 floor)
         run: |
-          UPD_APP="build/updater/LegacySupportUpdater.app" \
+          UPD_APP="$CROSS_BUILD_DIR/LegacySupportUpdater.app" \
           VERSION="${{ steps.ver.outputs.full }}" \
           sh build/package-pkg.sh
 
@@ -144,19 +149,19 @@ jobs:
           printenv SPARKLE_PRIVATE_KEY | grep -q . || { echo "::error::SPARKLE_PRIVATE_KEY secret not set"; exit 1; }
           SCRIPTS='${{ steps.msc.outputs.scripts }}'
           FULL="${{ steps.ver.outputs.full }}"; TAG="${{ steps.ver.outputs.tag }}"
-          PKG="build/out/macports-legacy-support-${FULL}.pkg"
+          PKG="$MAVERICKS_BUILD_ROOT/out/macports-legacy-support-${FULL}.pkg"
           URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/$(basename "$PKG")"
           sh "$SCRIPTS/sign_and_appcast.sh" \
             --channel-title "MacPorts legacy-support (Mavericks)" --version "$FULL" \
             --pkg-url "$URL" --notes-file dist/RELEASE_NOTES.md --pkg "$PKG" --min-os 10.9.5 \
-            > build/out/appcast.xml
-          cat build/out/appcast.xml
+            > "$MAVERICKS_BUILD_ROOT/out/appcast.xml"
+          cat "$MAVERICKS_BUILD_ROOT/out/appcast.xml"
 
       - name: Collect artifacts
         run: |
           mkdir -p dist
-          cp "build/out/macports-legacy-support-${{ steps.ver.outputs.full }}.pkg" dist/
-          [ -f build/out/appcast.xml ] && cp build/out/appcast.xml dist/ || true
+          cp "$MAVERICKS_BUILD_ROOT/out/macports-legacy-support-${{ steps.ver.outputs.full }}.pkg" dist/
+          [ -f "$MAVERICKS_BUILD_ROOT/out/appcast.xml" ] && cp "$MAVERICKS_BUILD_ROOT/out/appcast.xml" dist/ || true
 
       # Conformance: do the artifacts about to be published agree with each other and with the
       # family's schemes? Gated like the signing step -- a non-publishing build has no appcast, and
