@@ -2,7 +2,7 @@
 # Load the daily update-check agent, then borrow the system's own framework icon for the updater.
 #
 # The agent-load logic is NOT written here: stage_updater.sh renders it beside this script as
-# agent-load.sh, so every ModernMavericks product loads its agent the same way.
+# agent-load.sh, so every Mavergreen product loads its agent the same way.
 AGENT_LOAD="$(dirname "$0")/agent-load.sh"
 if [ -f "$AGENT_LOAD" ]; then
     . "$AGENT_LOAD"

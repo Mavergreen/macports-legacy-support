@@ -4,7 +4,7 @@ cd "$(dirname "$0")/.."
 w=.github/workflows/release.yml
 # correct shipyard usage: install ONLY via the action, pinned to @v1 (Renovate's
 # native github-actions manager tracks the moving major tag -- no SHA, no marker comment).
-grep -Eq 'uses: ModernMavericks/shipyard/\.github/actions/install@v1' "$w" \
+grep -Eq 'uses: Mavergreen/shipyard/\.github/actions/install@v1' "$w" \
   || { echo "install action not pinned to @v1"; exit 1; }
 grep -q 'cmake --install' "$w" && { echo "must NOT hand-install shipyard in CI"; exit 1; }
 grep -q 'submodule' "$w" && { echo "must NOT submodule shipyard"; exit 1; }

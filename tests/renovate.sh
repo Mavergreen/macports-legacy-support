@@ -6,7 +6,7 @@ python3 -m json.tool "$f" >/dev/null || { echo "invalid JSON"; exit 1; }
 python3 - "$f" <<'PY'
 import json, sys
 c = json.load(open(sys.argv[1]))
-assert "github>ModernMavericks/shipyard" in c.get("extends", []), "must extend the shared preset"
+assert "github>Mavergreen/shipyard" in c.get("extends", []), "must extend the shared preset"
 cm = c.get("customManagers", [])
 m = [x for x in cm if x.get("depNameTemplate") == "macports/macports-legacy-support"]
 assert m, "no customManager for upstream"

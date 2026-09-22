@@ -22,7 +22,7 @@ mavericks_add_updater_app(
   NAME LegacySupportUpdater
   PRODUCT_NAME "MacPorts legacy-support (Mavericks)"
   BUNDLE_ID dev.modernmavericks.LegacySupportUpdater
-  FEED_URL "https://github.com/ModernMavericks/macports-legacy-support/releases/latest/download/appcast.xml"
+  FEED_URL "https://github.com/Mavergreen/macports-legacy-support/releases/latest/download/appcast.xml"
   ICON "${CMAKE_SOURCE_DIR}/updater/macports-legacy-support-updater.icns"
   VERSION "${MLS_VERSION}"
   LOG_PREFIX "MLSUpdater"

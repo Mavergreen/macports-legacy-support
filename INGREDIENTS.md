@@ -5,7 +5,7 @@ Everything baked into the shipped `.pkg`, and how a change to it reaches a relea
 | Ingredient | Pinned in | Renovate | On a bump |
 |---|---|---|---|
 | macports-legacy-support source (own upstream) | `UPSTREAM_VERSION` | ✅ `github-tags` on `macports/macports-legacy-support` | `release.yml` cuts `<upstream>-mavericks.1` |
-| Sparkle framework, MacOSX10.9 SDK | `ModernMavericks/shipyard@v1` | ✅ github-actions manager tracks the tag | `@v1` is a *moving* tag: shipyard content changes without the pin changing, so nothing auto-repackages |
+| Sparkle framework, MacOSX10.9 SDK | `Mavergreen/shipyard@v1` | ✅ github-actions manager tracks the tag | `@v1` is a *moving* tag: shipyard content changes without the pin changing, so nothing auto-repackages |
 
 ## No repackage-on-ingredient-bump caller here — deliberately
 

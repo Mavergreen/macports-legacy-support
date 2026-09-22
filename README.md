@@ -5,11 +5,11 @@ as a double-clickable Sparkle-updatable .pkg for Mac OS X 10.9 Mavericks.
 
 ## Install (once)
 
-This repo builds with [shipyard](https://github.com/ModernMavericks/shipyard),
+This repo builds with [shipyard](https://github.com/Mavergreen/shipyard),
 the family's shared CMake helpers. Install its pkg once:
 
 ```sh
-gh release download -R ModernMavericks/shipyard --pattern '*.pkg'
+gh release download -R Mavergreen/shipyard --pattern '*.pkg'
 sudo installer -pkg mavericks-shipyard-*.pkg -target /
 ```
 
@@ -20,7 +20,7 @@ resolves with nothing to register and no `CMAKE_PREFIX_PATH` to set, and
 `MavericksShipyardConfig.cmake` refuses any other cmake by name rather than
 half-working. Do not clone, vendor or submodule shipyard.
 
-CI does the same thing through `ModernMavericks/shipyard/.github/actions/install@v1`.
+CI does the same thing through `Mavergreen/shipyard/.github/actions/install@v1`.
 
 To build the updater .app by hand:
 
