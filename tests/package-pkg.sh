@@ -34,5 +34,5 @@ COMP="$(ls -d "$X/x/"*.pkg | head -1)"
 BOM="$(lsbom "$COMP/Bom")"
 printf '%s\n' "$BOM" | grep -q 'usr/local/lib/libMacportsLegacySupport.dylib' || { echo "lib not in payload"; exit 1; }
 printf '%s\n' "$BOM" | grep -q 'LegacySupportUpdater.app' || { echo "updater not in payload"; exit 1; }
-printf '%s\n' "$BOM" | grep -q 'Library/LaunchAgents/dev.modernmavericks.macports-legacy-support-updatecheck.plist' || { echo "LaunchAgent not in payload"; exit 1; }
+printf '%s\n' "$BOM" | grep -q 'Library/LaunchAgents/dev.mavergreen.macports-legacy-support-updatecheck.plist' || { echo "LaunchAgent not in payload"; exit 1; }
 echo "package-pkg OK -> $pkg"

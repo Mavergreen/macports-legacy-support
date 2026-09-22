@@ -21,7 +21,7 @@ file(STRINGS "${CMAKE_SOURCE_DIR}/VERSION" MLS_VERSION LIMIT_COUNT 1)
 mavericks_add_updater_app(
   NAME LegacySupportUpdater
   PRODUCT_NAME "MacPorts legacy-support (Mavericks)"
-  BUNDLE_ID dev.modernmavericks.LegacySupportUpdater
+  BUNDLE_ID dev.mavergreen.LegacySupportUpdater
   FEED_URL "https://github.com/Mavergreen/macports-legacy-support/releases/latest/download/appcast.xml"
   ICON "${CMAKE_SOURCE_DIR}/updater/macports-legacy-support-updater.icns"
   VERSION "${MLS_VERSION}"

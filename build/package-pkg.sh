@@ -6,7 +6,7 @@ SELF="$(cd "$(dirname "$0")" && pwd)"
 MLS_ROOT="$(cd "$SELF/.." && pwd)"; export MLS_ROOT
 . "$SELF/lib.sh"
 
-# spec: claude-plugins/modernmavericks/skills/modernmavericks-conventions/SKILL.md
+# spec: claude-plugins/mavergreen/skills/mavergreen-conventions/SKILL.md
 #       "Build OUT of the source tree, onto fast local storage" -- CI exports
 #       MAVERICKS_BUILD_ROOT itself; this default only covers a plain local run.
 : "${MAVERICKS_BUILD_ROOT:=${TMPDIR:-/tmp}/mm-build}"
@@ -15,7 +15,7 @@ OUT="${OUT:-$MAVERICKS_BUILD_ROOT/out}"
 : "${UPD_APP:?package-pkg: UPD_APP (built updater .app) required}"
 : "${VERSION:?package-pkg: VERSION (full version) required}"
 SCRIPTS="$(msc_scripts)"
-ID="dev.modernmavericks.macports-legacy-support"
+ID="dev.mavergreen.macports-legacy-support"
 mkdir -p "$OUT"
 
 # 1) prove the shipped runtime is 10.9-safe (x86_64 + min-10.9 + no post-10.9 imports).
@@ -31,8 +31,8 @@ cp "$MLS_ROOT/packaging/postinstall" "$SCR/postinstall"; chmod +x "$SCR/postinst
 sh "$SCRIPTS/stage_updater.sh" \
   --stage "$STAGE" \
   --app "$UPD_APP" \
-  --app-dir "/Library/Application Support/ModernMavericks" \
-  --agent-label dev.modernmavericks.macports-legacy-support-updatecheck \
+  --app-dir "/Library/Application Support/Mavergreen" \
+  --agent-label dev.mavergreen.macports-legacy-support-updatecheck \
   --snippet-out "$SCR/agent-load.sh"
 
 # 3) flat component pkg from the staging root (absolute layout -> install-location /).

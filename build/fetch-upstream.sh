@@ -7,7 +7,7 @@ MLS_ROOT="$(cd "$SELF/.." && pwd)"; export MLS_ROOT
 . "$SELF/lib.sh"
 
 U="$(upstream_version)"
-# spec: claude-plugins/modernmavericks/skills/modernmavericks-conventions/SKILL.md
+# spec: claude-plugins/mavergreen/skills/mavergreen-conventions/SKILL.md
 #       "Build OUT of the source tree, onto fast local storage" -- CI exports
 #       MAVERICKS_BUILD_ROOT itself; this default only covers a plain local run.
 : "${MAVERICKS_BUILD_ROOT:=${TMPDIR:-/tmp}/mm-build}"
