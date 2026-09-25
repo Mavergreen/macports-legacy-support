@@ -1,4 +1,5 @@
 #!/bin/sh
+# platform: host-agnostic
 set -eu
 cd "$(dirname "$0")/.."
 D="$(mktemp -d "${TMPDIR:-/tmp}/fetch-upstream.XXXXXX")"   # template: 10.9 BSD mktemp requires one

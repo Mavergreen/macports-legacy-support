@@ -1,4 +1,5 @@
 #!/bin/sh
+# platform: macOS-only -- otool inspects the built updater's linked libraries
 set -eu
 cd "$(dirname "$0")/.."
 tmp="$(mktemp -d "${TMPDIR:-/tmp}/updater-build.XXXXXX")"   # template: 10.9 BSD mktemp requires one
@@ -9,8 +10,7 @@ tmp="$(mktemp -d "${TMPDIR:-/tmp}/updater-build.XXXXXX")"   # template: 10.9 BSD
 # looks, and a box with no shipyard pkg has no shipyard-cmake to point at it anyway. See the README's
 # "Install (once)"; to test against a shipyard you are developing, install it to a prefix of your own
 # and run this with CMAKE_PREFIX_PATH set to it.
-command -v shipyard-cmake >/dev/null 2>&1 \
-  || { echo "no shipyard-cmake (install the shipyard pkg -- README 'Install (once)') -- skipping" >&2; exit 77; }
+SC="$(command -v shipyard-cmake || echo /usr/local/mavergreen/bin/shipyard-cmake)"; [ -x "$SC" ] || { echo "no shipyard-cmake -- skipping" >&2; exit 77; }
 # msc.sh gives us SHIPYARD_SCRIPTS to point at MavericksToolchain.cmake: the toolchain-file backstop
 # FATAL_ERRORs a configure whose sysroot isn't the pinned SDK, and a bare shipyard-cmake call sets none.
 . build/msc.sh || { echo "msc.sh could not locate shipyard -- skipping" >&2; exit 77; }
@@ -21,10 +21,10 @@ command -v shipyard-cmake >/dev/null 2>&1 \
 
 printf '1.5.2-mavericks.1\n' > VERSION
 B="$tmp/updater"
-shipyard-cmake -S . -B "$B" -DCMAKE_OBJC_COMPILER=/usr/bin/clang \
+"$SC" -S . -B "$B" -DCMAKE_OBJC_COMPILER=/usr/bin/clang \
   -DCMAKE_TOOLCHAIN_FILE="$SHIPYARD_SCRIPTS/../MavericksToolchain.cmake" >/dev/null
-shipyard-cmake --build "$B" --target LegacySupportUpdater >/dev/null
-bin="$B/LegacySupportUpdater.app/Contents/MacOS/LegacySupportUpdater"
+"$SC" --build "$B" --target legacysupport-updater >/dev/null
+bin="$B/legacysupport-updater.app/Contents/MacOS/legacysupport-updater"
 [ -x "$bin" ] || { echo "updater binary missing"; exit 1; }
 ! otool -L "$bin" | grep -qi MacportsLegacySupport || { echo "updater links the library it updates"; exit 1; }
 echo "updater-build OK"

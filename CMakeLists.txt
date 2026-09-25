@@ -19,15 +19,13 @@ include(MavericksSparkle)   # the Sparkle updater .app builder
 file(STRINGS "${CMAKE_SOURCE_DIR}/VERSION" MLS_VERSION LIMIT_COUNT 1)
 
 mavericks_add_updater_app(
-  NAME LegacySupportUpdater
+  PRODUCT legacysupport
   PRODUCT_NAME "MacPorts legacy-support (Mavericks)"
-  BUNDLE_ID dev.mavergreen.LegacySupportUpdater
-  FEED_URL "https://github.com/Mavergreen/macports-legacy-support/releases/latest/download/appcast.xml"
   ICON "${CMAKE_SOURCE_DIR}/updater/macports-legacy-support-updater.icns"
   VERSION "${MLS_VERSION}"
   LOG_PREFIX "MLSUpdater"
   CONFIRM_TITLE "macports-legacy-support updated"
-  CONFIRM_BODY "The legacy-support libraries in /usr/local/lib were updated."
+  CONFIRM_BODY "The MacPorts legacy-support libraries in /usr/local/mavergreen/legacysupport were updated."
   RELAUNCH_MARKER "/tmp/.mavericks-legacysupport-updater-relaunched"
   # no PANE_HINT_KEY -> background-found updates post an NSUserNotification (a library, no pane)
 )

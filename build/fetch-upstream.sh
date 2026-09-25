@@ -1,4 +1,5 @@
 #!/bin/sh
+# platform: host-agnostic
 # Download + unpack the pinned upstream macports-legacy-support source. Not vendored:
 # fetched by tag at build time so Renovate (which edits UPSTREAM_VERSION) drives it.
 set -eu

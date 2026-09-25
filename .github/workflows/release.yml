@@ -114,14 +114,14 @@ jobs:
           B="$CROSS_BUILD_DIR"
           shipyard-cmake -S . -B "$B" -DCMAKE_OBJC_COMPILER=/usr/bin/clang \
             -DCMAKE_TOOLCHAIN_FILE="$SHIPYARD_SCRIPTS/../MavericksToolchain.cmake"
-          shipyard-cmake --build "$B" --target LegacySupportUpdater
-          bin="$B/LegacySupportUpdater.app/Contents/MacOS/LegacySupportUpdater"
+          shipyard-cmake --build "$B" --target legacysupport-updater
+          bin="$B/legacysupport-updater.app/Contents/MacOS/legacysupport-updater"
           otool -L "$bin" | tee /tmp/o.txt
           ! grep -qi MacportsLegacySupport /tmp/o.txt || { echo "::error::updater links the library it updates"; exit 1; }
 
       - name: Package the .pkg (library + updater + 10.9.5 floor)
         run: |
-          UPD_APP="$CROSS_BUILD_DIR/LegacySupportUpdater.app" \
+          UPD_APP="$CROSS_BUILD_DIR/legacysupport-updater.app" \
           VERSION="${{ steps.ver.outputs.full }}" \
           sh build/package-pkg.sh
 
@@ -153,16 +153,16 @@ jobs:
           PKG="$MAVERICKS_BUILD_ROOT/out/macports-legacy-support-${FULL}.pkg"
           URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/$(basename "$PKG")"
           sh "$SCRIPTS/sign_and_appcast.sh" \
+            --product legacysupport --feed-dir "$MAVERICKS_BUILD_ROOT/out" \
             --channel-title "MacPorts legacy-support (Mavericks)" --version "$FULL" \
-            --pkg-url "$URL" --notes-file dist/RELEASE_NOTES.md --pkg "$PKG" --min-os 10.9.5 \
-            > "$MAVERICKS_BUILD_ROOT/out/appcast.xml"
-          cat "$MAVERICKS_BUILD_ROOT/out/appcast.xml"
+            --pkg-url "$URL" --notes-file dist/RELEASE_NOTES.md --pkg "$PKG" --min-os 10.9.5
+          cat "$MAVERICKS_BUILD_ROOT/out/legacysupport.xml"
 
       - name: Collect artifacts
         run: |
           mkdir -p dist
           cp "$MAVERICKS_BUILD_ROOT/out/macports-legacy-support-${{ steps.ver.outputs.full }}.pkg" dist/
-          [ -f "$MAVERICKS_BUILD_ROOT/out/appcast.xml" ] && cp "$MAVERICKS_BUILD_ROOT/out/appcast.xml" dist/ || true
+          [ -f "$MAVERICKS_BUILD_ROOT/out/legacysupport.xml" ] && cp "$MAVERICKS_BUILD_ROOT/out/legacysupport.xml" dist/ || true
 
       # Conformance: do the artifacts about to be published agree with each other and with the
       # family's schemes? Gated like the signing step -- a non-publishing build has no appcast, and
@@ -175,7 +175,7 @@ jobs:
           # Behavior gate: a client on the previous release must SEE this as an upgrade -- a numeric
           # sparkle:version that orders strictly after the last published one (ordering conformance
           # never exercised; the gap the "-mavericks.N compares EQUAL" bug shipped through).
-          sh "$SHIPYARD_SCRIPTS/assert_appcast_upgradeable.sh" --appcast dist/appcast.xml --version "${{ steps.ver.outputs.full }}"
+          sh "$SHIPYARD_SCRIPTS/assert_appcast_upgradeable.sh" --appcast dist/legacysupport.xml --version "${{ steps.ver.outputs.full }}"
 
       - uses: actions/upload-artifact@v7
         with:

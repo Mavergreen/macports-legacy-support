@@ -17,3 +17,7 @@ owns, and its only other input is `shipyard@v1`, whose moving tag no path filter
 A caller would therefore have nothing to watch. Add one the moment a real ingredient pin lands here
 (a prebuilt dependency, a vendored blob with a hash), pointing `own-upstream-paths` at
 `UPSTREAM_VERSION` so a new upstream still takes the `-mavericks.1` path.
+
+## Conformance deviations
+
+- sdk-pin:usr/local/mavergreen/legacysupport/lib/libMacportsLegacySupport.a: a pre-Xcode-7 clang (this box's native Mavericks toolchain) never writes a version-min load command into a relocatable object, only into what it links, so the static archive's .o members record none even though every compile passes the pinned 10.9 SDK and -mmacosx-version-min=10.9 (build/build-lib.sh); the linked libMacportsLegacySupport.dylib and libMacportsLegacySystem.B.dylib built from the same objects both record minos 10.9 / sdk 10.9 cleanly

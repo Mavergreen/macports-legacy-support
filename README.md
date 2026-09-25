@@ -3,6 +3,16 @@
 [macports-legacy-support](https://github.com/macports/macports-legacy-support)
 as a double-clickable Sparkle-updatable .pkg for Mac OS X 10.9 Mavericks.
 
+## Linking
+
+The installed pkg puts the library and headers under
+`/usr/local/mavergreen/legacysupport`. Build against it with:
+
+```sh
+cc -I/usr/local/mavergreen/legacysupport/include/LegacySupport \
+   -L/usr/local/mavergreen/legacysupport/lib -lMacportsLegacySupport ...
+```
+
 ## Install (once)
 
 This repo builds with [shipyard](https://github.com/Mavergreen/shipyard),
@@ -14,7 +24,8 @@ sudo installer -pkg mavericks-shipyard-*.pkg -target /
 ```
 
 That puts `shipyard-cmake`, `shipyard-ctest` and `shipyard-cpack` in
-`/usr/local/bin`. **`shipyard-cmake` is the only cmake that configures this
+`/usr/local/mavergreen/bin` (on the path via `/etc/paths.d/mavergreen`).
+**`shipyard-cmake` is the only cmake that configures this
 project.** It finds shipyard in its own prefix, so `find_package(MavericksShipyard)`
 resolves with nothing to register and no `CMAKE_PREFIX_PATH` to set, and
 `MavericksShipyardConfig.cmake` refuses any other cmake by name rather than
@@ -28,7 +39,7 @@ To build the updater .app by hand:
 . build/msc.sh   # exports SHIPYARD_SCRIPTS, for MavericksToolchain.cmake below
 shipyard-cmake -S . -B build/updater -DCMAKE_OBJC_COMPILER=/usr/bin/clang \
   -DCMAKE_TOOLCHAIN_FILE="$SHIPYARD_SCRIPTS/../MavericksToolchain.cmake"
-shipyard-cmake --build build/updater --target LegacySupportUpdater
+shipyard-cmake --build build/updater --target legacysupport-updater
 ```
 
 `tests/updater-build.sh` and `tests/package-pkg.sh` skip (exit 77) when

@@ -1,4 +1,5 @@
 #!/bin/sh
+# platform: host-agnostic
 set -eu
 cd "$(dirname "$0")/.."
 w=.github/workflows/release.yml
