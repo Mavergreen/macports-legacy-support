@@ -112,7 +112,8 @@ jobs:
       - name: Build the Sparkle updater (Cocoa/ObjC; must not link the library)
         run: |
           B="$CROSS_BUILD_DIR"
-          shipyard-cmake -S . -B "$B" -DCMAKE_OBJC_COMPILER=/usr/bin/clang
+          shipyard-cmake -S . -B "$B" -DCMAKE_OBJC_COMPILER=/usr/bin/clang \
+            -DCMAKE_TOOLCHAIN_FILE="$SHIPYARD_SCRIPTS/../MavericksToolchain.cmake"
           shipyard-cmake --build "$B" --target LegacySupportUpdater
           bin="$B/LegacySupportUpdater.app/Contents/MacOS/LegacySupportUpdater"
           otool -L "$bin" | tee /tmp/o.txt
