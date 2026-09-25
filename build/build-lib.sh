@@ -1,5 +1,5 @@
 #!/bin/sh
-# platform: host-agnostic
+# platform: macOS-only -- the upstream Makefile links Mach-O dylibs and sets their ids with install_name_tool
 # Cross-build macports-legacy-support to x86_64 / min-10.9 and DESTDIR-install into a
 # staging root. Uses the 10.9 SDK ($SDK if set, else mavericks-shipyard's fetch script).
 set -eu
