@@ -11,10 +11,14 @@ tmp="$(mktemp -d "${TMPDIR:-/tmp}/updater-build.XXXXXX")"   # template: 10.9 BSD
 # and run this with CMAKE_PREFIX_PATH set to it.
 command -v shipyard-cmake >/dev/null 2>&1 \
   || { echo "no shipyard-cmake (install the shipyard pkg -- README 'Install (once)') -- skipping" >&2; exit 77; }
+# msc.sh gives us SHIPYARD_SCRIPTS to point at MavericksToolchain.cmake: the toolchain-file backstop
+# FATAL_ERRORs a configure whose sysroot isn't the pinned SDK, and a bare shipyard-cmake call sets none.
+. build/msc.sh || { echo "msc.sh could not locate shipyard -- skipping" >&2; exit 77; }
 
 printf '1.5.2-mavericks.1\n' > VERSION
 B="$tmp/updater"
-shipyard-cmake -S . -B "$B" -DCMAKE_OBJC_COMPILER=/usr/bin/clang >/dev/null
+shipyard-cmake -S . -B "$B" -DCMAKE_OBJC_COMPILER=/usr/bin/clang \
+  -DCMAKE_TOOLCHAIN_FILE="$SHIPYARD_SCRIPTS/../MavericksToolchain.cmake" >/dev/null
 shipyard-cmake --build "$B" --target LegacySupportUpdater >/dev/null
 bin="$B/LegacySupportUpdater.app/Contents/MacOS/LegacySupportUpdater"
 [ -x "$bin" ] || { echo "updater binary missing"; exit 1; }

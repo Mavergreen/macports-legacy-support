@@ -15,7 +15,11 @@ tmp="$(mktemp -d "${TMPDIR:-/tmp}/package-pkg-tmp.XXXXXX")"   # template: 10.9 B
 # and run this with CMAKE_PREFIX_PATH set to it.
 command -v shipyard-cmake >/dev/null 2>&1 \
   || { echo "no shipyard-cmake (install the shipyard pkg -- README 'Install (once)') -- skipping" >&2; exit 77; }
-shipyard-cmake -S . -B "$tmp/updater" -DCMAKE_OBJC_COMPILER=/usr/bin/clang >/dev/null
+# msc.sh gives us SHIPYARD_SCRIPTS to point at MavericksToolchain.cmake: the toolchain-file backstop
+# FATAL_ERRORs a configure whose sysroot isn't the pinned SDK, and a bare shipyard-cmake call sets none.
+. build/msc.sh || { echo "msc.sh could not locate shipyard -- skipping" >&2; exit 77; }
+shipyard-cmake -S . -B "$tmp/updater" -DCMAKE_OBJC_COMPILER=/usr/bin/clang \
+  -DCMAKE_TOOLCHAIN_FILE="$SHIPYARD_SCRIPTS/../MavericksToolchain.cmake" >/dev/null
 shipyard-cmake --build "$tmp/updater" --target LegacySupportUpdater >/dev/null
 
 OUT="$tmp/out"

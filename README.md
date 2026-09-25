@@ -25,7 +25,9 @@ CI does the same thing through `Mavergreen/shipyard/.github/actions/install@v1`.
 To build the updater .app by hand:
 
 ```sh
-shipyard-cmake -S . -B build/updater -DCMAKE_OBJC_COMPILER=/usr/bin/clang
+. build/msc.sh   # exports SHIPYARD_SCRIPTS, for MavericksToolchain.cmake below
+shipyard-cmake -S . -B build/updater -DCMAKE_OBJC_COMPILER=/usr/bin/clang \
+  -DCMAKE_TOOLCHAIN_FILE="$SHIPYARD_SCRIPTS/../MavericksToolchain.cmake"
 shipyard-cmake --build build/updater --target LegacySupportUpdater
 ```
 
@@ -37,5 +39,7 @@ If you are developing shipyard itself, install your working copy to a prefix of
 your own and point one configure at it — shipyard's own README has the details:
 
 ```sh
-CMAKE_PREFIX_PATH="$HOME/.local/opt/shipyard-dev" shipyard-cmake -S . -B build/updater
+export CMAKE_PREFIX_PATH="$HOME/.local/opt/shipyard-dev"
+. build/msc.sh   # exports SHIPYARD_SCRIPTS, from the same dev prefix
+shipyard-cmake -S . -B build/updater -DCMAKE_TOOLCHAIN_FILE="$SHIPYARD_SCRIPTS/../MavericksToolchain.cmake"
 ```
