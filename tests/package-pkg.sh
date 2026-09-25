@@ -2,7 +2,7 @@
 set -eu
 cd "$(dirname "$0")/.."
 STAGE="$(mktemp -d "${TMPDIR:-/tmp}/package-pkg.XXXXXX")/stage"   # template: 10.9 BSD mktemp requires one
-SDK="$(xcrun --show-sdk-path)" sh build/build-lib.sh "$STAGE" >/dev/null
+sh build/build-lib.sh "$STAGE" >/dev/null   # build-lib.sh fetches the pinned 10.9 SDK itself
 
 printf '1.5.2-mavericks.1\n' > VERSION
 tmp="$(mktemp -d "${TMPDIR:-/tmp}/package-pkg-tmp.XXXXXX")"   # template: 10.9 BSD mktemp requires one

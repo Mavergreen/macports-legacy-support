@@ -3,7 +3,7 @@ set -eu
 cd "$(dirname "$0")/.."
 TMP="$(mktemp -d "${TMPDIR:-/tmp}/build-lib.XXXXXX")"; trap 'rm -rf "$TMP"' EXIT   # template: 10.9 BSD mktemp requires one
 STAGE="$TMP/stage"
-SDK="$(xcrun --show-sdk-path)" sh build/build-lib.sh "$STAGE" >/dev/null
+sh build/build-lib.sh "$STAGE" >/dev/null   # build-lib.sh fetches the pinned 10.9 SDK itself
 lib="$STAGE/usr/local/lib"
 for f in libMacportsLegacySupport.a libMacportsLegacySupport.dylib; do
   [ -f "$lib/$f" ] || { echo "missing $f"; exit 1; }
